@@ -263,7 +263,6 @@ a{
   .orders {
     display: none;
   }
-
   .cart {
     position: absolute;
     top: 15px;
@@ -678,6 +677,26 @@ footer {
   }
 }
 /* ------------------------------------- Home.jsx------------------------------------------ */
+.carousel-img {
+  width: 100%;
+  height: 100vh;        
+  object-fit: cover;
+}
+
+/* Mobile screens */
+@media (max-width: 768px) {
+  .carousel-img {
+    height: 80%;       
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 480px) {
+  .carousel-img {
+    height: 50vh;     
+  }
+}
+
 .offer-section {
   display: flex;
   flex-wrap: wrap;
