@@ -83,7 +83,7 @@ const Header = ({ onLoginClick }) => {
       <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
         <div className="sidebar-header">
           <div
-            className="account"
+            className="accountt"
             onClick={onLoginClick}
             style={{ cursor: "pointer" }}
           >

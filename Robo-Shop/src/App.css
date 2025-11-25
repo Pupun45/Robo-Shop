@@ -52,6 +52,14 @@ header {
   align-items: center;
   text-align: center;
 }
+.account{
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 a{
   text-decoration: none;
   color: white;
@@ -277,12 +285,10 @@ a{
   .search-bar select {
     display: none;
   }
-
   .second-nav p {
     font-size: 0.8rem;
     padding: 4px 10px;
   }
-
   .menu-icon {
     top: 23px;
     left: 7px;
