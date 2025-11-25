@@ -99,28 +99,61 @@ const Header = ({ onLoginClick }) => {
           <h4
             onClick={() => {
               toggleSection("SensorsSensorModules");
-              navigate("/SensorsSensorModules"); }} >
+              navigate("/SensorsSensorModules", { state: { category: "All" } });
+            }}
+          >
             Sensors & Sensor Modules
             <span className="arrow">
               {openSection === "SensorsSensorModules" ? "▲" : "▼"}
             </span>
           </h4>
+
           <div
             className={`dropdown ${openSection === "SensorsSensorModules" ? "open" : ""
               }`}
           >
-            <p>Sensors & Sensor Modules</p>
-            <p>Light, Sound & Colour</p>
-            <p>IR, Laser, Proximity & Ultrasonic</p>
-            <p>Gas, Temperature, Humidity</p>
-            <p>Voltage, Current & Rotation</p>
-            <p>Flex, Pressure and Vibration</p>
-            <p>Biomedical Sensor</p>
-            <p>Accelerometer, Magnetometer, Gyroscope</p>
-            <p>Sensor Switch & Touch Switch</p>
-            <p>Water, PH, Turbidity, Moisture & Flow</p>
+            <p onClick={() => navigate("/SensorsSensorModules", { state: { category: "All" } })}>
+              Sensors & Sensor Modules
+            </p>
+
+            <p onClick={() => navigate("/SensorsSensorModules", { state: { category: "Light, Sound & Colour" } })}>
+              Light, Sound & Colour
+            </p>
+
+            <p onClick={() => navigate("/SensorsSensorModules", { state: { category: "IR, Laser, Proximity & Ultrasonic" } })}>
+              IR, Laser, Proximity & Ultrasonic
+            </p>
+
+            <p onClick={() => navigate("/SensorsSensorModules", { state: { category: "Gas, Temperature, Humidity" } })}>
+              Gas, Temperature, Humidity
+            </p>
+
+            <p onClick={() => navigate("/SensorsSensorModules", { state: { category: "Voltage, Current & Rotation" } })}>
+              Voltage, Current & Rotation
+            </p>
+
+            <p onClick={() => navigate("/SensorsSensorModules", { state: { category: "Flex, Pressure & Vibration" } })}>
+              Flex, Pressure and Vibration
+            </p>
+
+            <p onClick={() => navigate("/SensorsSensorModules", { state: { category: "Biomedical Sensor" } })}>
+              Biomedical Sensor
+            </p>
+
+            <p onClick={() => navigate("/SensorsSensorModules", { state: { category: "Accelerometer, Magnetometer, Gyroscope" } })}>
+              Accelerometer, Magnetometer, Gyroscope
+            </p>
+
+            <p onClick={() => navigate("/SensorsSensorModules", { state: { category: "Sensor Switch & Touch Switch" } })}>
+              Sensor Switch & Touch Switch
+            </p>
+
+            <p onClick={() => navigate("/SensorsSensorModules", { state: { category: "Water, PH, Turbidity, Moisture & Flow" } })}>
+              Water, PH, Turbidity, Moisture & Flow
+            </p>
           </div>
         </div>
+
         <div className="sidebar-section">
           <h4 onClick={() => toggleSection("IOT")}>
             IOT & Wireless Module

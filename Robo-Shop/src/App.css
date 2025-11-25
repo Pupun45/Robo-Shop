@@ -2408,3 +2408,74 @@ body.popup-open {
 .move-cart-btn:hover {
   background-color: #096dd9;
 }
+
+
+/* ..............product-SensorsSensorModules......................... */
+.sensor-page {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* LEFT SIDE */
+.sensor-products {
+  width: 70%;
+  background: #f3f3f3;
+  cursor: pointer;
+}
+p:hover{
+  cursor: pointer;
+  color: #ce9221;
+}
+.product-box {
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
+
+/* RIGHT SIDE PRODUCT GRID */
+.sensor-products {
+  width: 75%;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Product Card */
+.product-box {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  transition: 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Product Image */
+.product-image {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+/* Product name */
+.product-box h4 {
+  font-size: 16px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Price */
+.product-box p {
+  font-size: 14px;
+  color: #333;
+}

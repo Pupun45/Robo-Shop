@@ -80,7 +80,7 @@ export default function Shop() {
               ❤️
             </div>
 
-            <img src={product.image} alt={product.name} />
+            <img src={`http://localhost:5000/uploads/${product.image}`} alt="" />
             <h4>{product.name}</h4>
 
             <p className="Shop-price">

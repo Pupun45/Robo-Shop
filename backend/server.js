@@ -6,17 +6,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// =========================
-// 🔥 CONNECT TO MONGODB
-// =========================
+// ⭐ Serve uploads folder
+app.use("/uploads", express.static("uploads"));
+
+
 mongoose
   .connect("mongodb://localhost:27017")
   .then(() => console.log("MongoDB Connected ✔"))
   .catch((err) => console.log("MongoDB Error:", err));
 
-// =========================
-// 📌 PRODUCT SCHEMA
-// =========================
 const ProductSchema = new mongoose.Schema({
   name: { type: String, required: true },
   oldPrice: { type: String, required: true },
@@ -25,36 +23,36 @@ const ProductSchema = new mongoose.Schema({
 });
 
 const Product = mongoose.model("Product", ProductSchema);
+const ProProduct = mongoose.model("ProProduct", ProductSchema);
 
-// =========================
-// 📌 GET ALL PRODUCTS
-// =========================
+// GET products
 app.get("/products", async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching products" });
-  }
+  const products = await Product.find();
+  res.json(products);
 });
+
+// ADD product
 app.post("/products/add", async (req, res) => {
-  try {
-    const { name, oldPrice, price, image } = req.body;
-
-    const product = new Product({ name, oldPrice, price, image });
-    await product.save();
-
-    res.json({ message: "Product added successfully!", product });
-  } catch (err) {
-    console.log("Product Add Error:", err);  // <-- 👈 SHOW REAL ERROR
-    res.status(500).json({ message: "Error adding product", error: err.message });
-  }
+  const { name, oldPrice, price, image } = req.body;
+  const product = new Product({ name, oldPrice, price, image });
+  await product.save();
+  res.json({ message: "Product added successfully!", product });
 });
 
+// GET PRO products
+app.get("/pro", async (req, res) => {
+  const products = await ProProduct.find();
+  res.json(products);
+});
 
-// =========================
-// 🚀 START SERVER
-// =========================
+// ADD PRO product
+app.post("/pro/add", async (req, res) => {
+  const { name, oldPrice, price, image } = req.body;
+  const product = new ProProduct({ name, oldPrice, price, image });
+  await product.save();
+  res.json({ message: "Pro product added successfully!", product });
+});
+
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
 });
