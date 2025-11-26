@@ -252,7 +252,6 @@ a{
     flex-wrap: wrap;
     gap: 10px;
   }
-
   .sell {
     display: none;
   }
@@ -271,12 +270,12 @@ a{
   }
 
   .menu-icon {
-    top: 115px;
+    top: 22px;
     left: 10px;
   }
 
   .sidebar {
-    width: 65%;
+    width: 54%;
   }
 }
 
