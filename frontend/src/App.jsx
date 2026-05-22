@@ -42,7 +42,7 @@ const GalleryPage = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMedia, setSelectedMedia] = useState(null); // { url, type }
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5117';
 
   useEffect(() => {
     const fetchGallery = async () => {
@@ -471,7 +471,7 @@ const ServicesPage = () => {
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5117';
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -546,7 +546,7 @@ const ContactPage = () => {
     supportCenter: 'support@roboshop.com'
   });
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5117';
 
   useEffect(() => {
     const fetchContactInfo = async () => {
@@ -728,7 +728,7 @@ const Footer = () => {
     copyrightText: 'Robo Shop. All rights reserved.'
   });
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5117';
 
   useEffect(() => {
     const fetchContactInfo = async () => {

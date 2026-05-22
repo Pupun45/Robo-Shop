@@ -83,7 +83,7 @@ export const SignUpPage = () => {
     setLoading(true);
     const toastId = toast.loading('Creating account...');
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5117';
       const response = await axios.post(`${apiUrl}/api/users/signup`, {
         name,
         mobile,
@@ -207,7 +207,7 @@ const Login = () => {
     setLoading(true);
     const toastId = toast.loading('Logging in...');
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5117';
       const response = await axios.post(`${apiUrl}/api/users/login`, {
         email,
         password

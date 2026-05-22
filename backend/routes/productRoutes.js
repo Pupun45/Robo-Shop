@@ -22,6 +22,33 @@ const deleteFileFromDisk = (url) => {
   }
 };
 
+const getFullUrl = (req, filePath) => {
+  if (!filePath || typeof filePath !== 'string') return filePath;
+  if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
+    if (filePath.includes('/uploads/')) {
+      const fileName = filePath.split('/uploads/').pop();
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+      const host = req.get('host');
+      return `${protocol}://${host}/uploads/${fileName}`;
+    }
+    return filePath;
+  }
+  const cleanPath = filePath.startsWith('/') ? filePath : `/${filePath}`;
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+  const host = req.get('host');
+  return `${protocol}://${host}${cleanPath}`;
+};
+
+const cleanToRelative = (filePath) => {
+  if (!filePath || typeof filePath !== 'string') return filePath;
+  if (filePath.includes('/uploads/')) {
+    const parts = filePath.split('/uploads/');
+    const filename = parts[parts.length - 1];
+    return `/uploads/${filename}`;
+  }
+  return filePath;
+};
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -44,8 +71,13 @@ const upload = multer({
 
 router.get('/', async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
-    res.json(products);
+    const products = await Product.find().sort({ createdAt: -1 }).lean();
+    const mappedProducts = products.map(product => ({
+      ...product,
+      images: product.images ? product.images.map(img => getFullUrl(req, img)) : [],
+      videos: product.videos ? product.videos.map(vid => getFullUrl(req, vid)) : []
+    }));
+    res.json(mappedProducts);
   } catch (err) {
     console.error('Error fetching products:', err);
     res.status(500).json({ message: 'Server Error', error: err.message });
@@ -59,10 +91,10 @@ router.post('/', authMiddleware, upload.fields([{ name: 'image', maxCount: 10 },
   let videoUrls = [];
 
   if (req.files && req.files.image) {
-    imageUrls = req.files.image.map(file => `${BACKEND_URL}/uploads/${file.filename}`);
+    imageUrls = req.files.image.map(file => `/uploads/${file.filename}`);
   }
   if (req.files && req.files.video) {
-    videoUrls = req.files.video.map(file => `${BACKEND_URL}/uploads/${file.filename}`);
+    videoUrls = req.files.video.map(file => `/uploads/${file.filename}`);
   }
 
   try {
@@ -77,7 +109,11 @@ router.post('/', authMiddleware, upload.fields([{ name: 'image', maxCount: 10 },
       videos: videoUrls
     });
     await newProduct.save();
-    res.json(newProduct);
+    
+    const productObj = newProduct.toObject();
+    productObj.images = productObj.images ? productObj.images.map(img => getFullUrl(req, img)) : [];
+    productObj.videos = productObj.videos ? productObj.videos.map(vid => getFullUrl(req, vid)) : [];
+    res.json(productObj);
   } catch (err) {
     res.status(500).json({ message: 'Server Error' });
   }
@@ -100,6 +136,10 @@ router.put('/:id', authMiddleware, upload.fields([{ name: 'image', maxCount: 10 
     let currentImages = req.body.existingImages ? JSON.parse(req.body.existingImages) : product.images;
     let currentVideos = req.body.existingVideos ? JSON.parse(req.body.existingVideos) : product.videos;
 
+    // Convert both to relative paths for comparisons and storage
+    currentImages = currentImages.map(img => cleanToRelative(img));
+    currentVideos = currentVideos.map(vid => cleanToRelative(vid));
+
     // Identify and delete files removed from the arrays
     product.images.forEach(img => {
       if (!currentImages.includes(img)) deleteFileFromDisk(img);
@@ -109,11 +149,11 @@ router.put('/:id', authMiddleware, upload.fields([{ name: 'image', maxCount: 10 
     });
 
     if (req.files && req.files.image) {
-      const newImages = req.files.image.map(file => `${BACKEND_URL}/uploads/${file.filename}`);
+      const newImages = req.files.image.map(file => `/uploads/${file.filename}`);
       currentImages = [...currentImages, ...newImages].slice(0, 10);
     }
     if (req.files && req.files.video) {
-      const newVideos = req.files.video.map(file => `${BACKEND_URL}/uploads/${file.filename}`);
+      const newVideos = req.files.video.map(file => `/uploads/${file.filename}`);
       currentVideos = [...currentVideos, ...newVideos].slice(0, 2);
     }
 
@@ -121,7 +161,11 @@ router.put('/:id', authMiddleware, upload.fields([{ name: 'image', maxCount: 10 
     product.videos = currentVideos;
 
     await product.save();
-    res.json(product);
+    
+    const productObj = product.toObject();
+    productObj.images = productObj.images ? productObj.images.map(img => getFullUrl(req, img)) : [];
+    productObj.videos = productObj.videos ? productObj.videos.map(vid => getFullUrl(req, vid)) : [];
+    res.json(productObj);
   } catch (err) {
     res.status(500).json({ message: 'Server Error' });
   }

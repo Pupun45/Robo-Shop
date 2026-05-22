@@ -16,7 +16,7 @@ const Products = () => {
   const [categories, setCategories] = useState([]);
   const [catsLoading, setCatsLoading] = useState(true);
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5117';
 
   // Fetch categories from backend
   useEffect(() => {

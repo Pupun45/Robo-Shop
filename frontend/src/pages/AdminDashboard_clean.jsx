@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -50,7 +50,7 @@ const AdminDashboard = () => {
   // Service Form State
   const [serviceForm, setServiceForm] = useState({ name: '', description: '', icon: 'HardDrive', color: 'text-indigo-500' });
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5117';
 
   useEffect(() => {
     if (!adminToken) {

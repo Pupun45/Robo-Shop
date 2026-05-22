@@ -84,7 +84,7 @@ const AdminDashboard = () => {
   // Service Form State
   const [serviceForm, setServiceForm] = useState({ name: '', description: '', icon: 'HardDrive', color: 'text-yellow-600' });
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5117';
 
   useEffect(() => {
     if (!adminToken) {

@@ -12,7 +12,7 @@ export const ProductProvider = ({ children }) => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5117';
       const response = await axios.get(`${apiUrl}/api/products`);
       setProducts(response.data);
       setError(null);

@@ -90,6 +90,82 @@ mongoose.connect(process.env.MONGO_URI, {
   } catch (migErr) {
     console.error('⚠️ Database migration error:', migErr);
   }
+
+  // Migrate Products and Gallery images/videos to relative paths
+  try {
+    const Product = require('./models/Product');
+    const Gallery = require('./models/Gallery');
+
+    const cleanToRelative = (filePath) => {
+      if (!filePath || typeof filePath !== 'string') return filePath;
+      if (filePath.includes('/uploads/')) {
+        const parts = filePath.split('/uploads/');
+        const filename = parts[parts.length - 1];
+        return `/uploads/${filename}`;
+      }
+      return filePath;
+    };
+
+    // Migrate Products
+    const products = await Product.find();
+    let productMigrationCount = 0;
+    for (let p of products) {
+      let changed = false;
+      if (p.images && p.images.length > 0) {
+        const newImages = p.images.map(img => {
+          const relative = cleanToRelative(img);
+          if (relative !== img) changed = true;
+          return relative;
+        });
+        if (changed) p.images = newImages;
+      }
+      if (p.videos && p.videos.length > 0) {
+        const newVideos = p.videos.map(vid => {
+          const relative = cleanToRelative(vid);
+          if (relative !== vid) changed = true;
+          return relative;
+        });
+        if (changed) p.videos = newVideos;
+      }
+      if (changed) {
+        await p.save();
+        productMigrationCount++;
+      }
+    }
+    if (productMigrationCount > 0) {
+      console.log(`✅ Migrated ${productMigrationCount} products' media URLs to relative paths.`);
+    }
+
+    // Migrate Gallery
+    const galleryItems = await Gallery.find();
+    let galleryMigrationCount = 0;
+    for (let g of galleryItems) {
+      let changed = false;
+      if (g.image) {
+        const relative = cleanToRelative(g.image);
+        if (relative !== g.image) {
+          g.image = relative;
+          changed = true;
+        }
+      }
+      if (g.video) {
+        const relative = cleanToRelative(g.video);
+        if (relative !== g.video) {
+          g.video = relative;
+          changed = true;
+        }
+      }
+      if (changed) {
+        await g.save();
+        galleryMigrationCount++;
+      }
+    }
+    if (galleryMigrationCount > 0) {
+      console.log(`✅ Migrated ${galleryMigrationCount} gallery items' media URLs to relative paths.`);
+    }
+  } catch (migErr) {
+    console.error('⚠️ Database media migration error:', migErr);
+  }
 })
 .catch(err => {
   console.error('❌ MongoDB connection error details:');

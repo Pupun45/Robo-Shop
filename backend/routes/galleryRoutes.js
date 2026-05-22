@@ -22,6 +22,23 @@ const deleteFileFromDisk = (url) => {
   }
 };
 
+const getFullUrl = (req, filePath) => {
+  if (!filePath || typeof filePath !== 'string') return filePath;
+  if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
+    if (filePath.includes('/uploads/')) {
+      const fileName = filePath.split('/uploads/').pop();
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+      const host = req.get('host');
+      return `${protocol}://${host}/uploads/${fileName}`;
+    }
+    return filePath;
+  }
+  const cleanPath = filePath.startsWith('/') ? filePath : `/${filePath}`;
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+  const host = req.get('host');
+  return `${protocol}://${host}${cleanPath}`;
+};
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -45,8 +62,13 @@ const upload = multer({
 // GET /api/gallery
 router.get('/', async (req, res) => {
   try {
-    const items = await Gallery.find().sort({ createdAt: -1 });
-    res.json(items);
+    const items = await Gallery.find().sort({ createdAt: -1 }).lean();
+    const mappedItems = items.map(item => ({
+      ...item,
+      image: item.image ? getFullUrl(req, item.image) : '',
+      video: item.video ? getFullUrl(req, item.video) : ''
+    }));
+    res.json(mappedItems);
   } catch (err) {
     console.error('Error fetching gallery:', err);
     res.status(500).json({ message: 'Server Error', error: err.message });
@@ -69,16 +91,20 @@ router.post('/', authMiddleware, upload.fields([{ name: 'image', maxCount: 1 }, 
   let videoUrl = '';
 
   if (req.files.image) {
-    imageUrl = `${BACKEND_URL}/uploads/${req.files.image[0].filename}`;
+    imageUrl = `/uploads/${req.files.image[0].filename}`;
   }
   if (req.files.video) {
-    videoUrl = `${BACKEND_URL}/uploads/${req.files.video[0].filename}`;
+    videoUrl = `/uploads/${req.files.video[0].filename}`;
   }
 
   try {
     const newItem = new Gallery({ image: imageUrl, video: videoUrl, caption, description, link });
     await newItem.save();
-    res.json(newItem);
+    
+    const itemObj = newItem.toObject();
+    itemObj.image = itemObj.image ? getFullUrl(req, itemObj.image) : '';
+    itemObj.video = itemObj.video ? getFullUrl(req, itemObj.video) : '';
+    res.json(itemObj);
   } catch (err) {
     res.status(500).json({ message: 'Server Error' });
   }
