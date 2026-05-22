@@ -10,7 +10,7 @@ dotenv.config();
 
 // Fallbacks for hosting platforms like Render to prevent 500 errors out of the box
 process.env.MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://ionodecloud_db_user:ionodecloud_db_123@ionode.ckcssnb.mongodb.net/Robo-Shop';
-process.env.JWT_SECRET = process.env.JWT_SECRET || 'abebddec7b4fd5cad6bda4cc4e5b0c6aec592c79c9ad0b62a7880bf5386fb8c2b9e4b7493b18f27aed0643f3d2c74e56ad934d10c59f4d264f393472123eeb26';
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'b57e4cda049dd34550c2971f6b4dbb57f9146d7dbf10a7f416ab25833e5f96cb9b24891573118f05f19bb95a60e49de64c9db5b22c02ee7d9870afb613c9c33c';
 
 const adminRoutes = require('./routes/adminRoutes');
 const productRoutes = require('./routes/productRoutes');
